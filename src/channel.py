@@ -3,16 +3,11 @@ import os
 from googleapiclient.discovery import build
 
 
-# api_key: str = os.getenv('YOU_TUBE_API_KEY')
-
-# создать специальный объект для работы с API
-# youtube = build('youtube', 'v3', developerKey=api_key)
-
 
 class Channel:
     """Класс для ютуб-канала"""
     api_key: str = os.getenv('YOU_TUBE_API_KEY')
-    youtube = build('youtube', 'v3', developerKey=api_key)
+    youtube = build('youtube', 'v3', developerKey=api_key)   # объект для работы с api ютуба
 
     def __init__(self, channel_id: str) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
@@ -24,6 +19,31 @@ class Channel:
         self.subscriber_count = self.channel_info['items'][0]['statistics']['subscriberCount']
         self.video_count = self.channel_info['items'][0]['statistics']['videoCount']
         self.view_count = self.channel_info['items'][0]['statistics']['viewCount']
+
+    def __str__(self):
+        return f'{self.title} ({self.url}'
+
+    def __add__(self, other):
+        return int(self.subscriber_count) + int(other.subscriber_count)
+
+    def __sub__(self, other):
+        return int(self.subscriber_count) - int(other.subscriber_count)
+
+    def __gt__(self, other):
+        return int(self.subscriber_count) > int(other.subscriber_count)
+
+    def __ge__(self, other):
+        return int(self.subscriber_count) >= int(other.subscriber_count)
+
+    def __lt__(self, other):
+        return int(self.subscriber_count) < int(other.subscriber_count)
+
+    def __le__(self, other):
+        return int(self.subscriber_count) <= int(other.subscriber_count)
+
+    def __eq__(self, other):
+        return int(self.subscriber_count) == int(other.subscriber_count)
+
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале в удобном формате, с отступами"""
