@@ -3,6 +3,7 @@ from src.channel import Channel
 
 class Video(Channel):
     def __init__(self, video_id):
+
         self.video_id = video_id
         self.video_info = self.youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                      id=self.video_id).execute()
