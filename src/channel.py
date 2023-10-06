@@ -3,13 +3,12 @@ import os
 from googleapiclient.discovery import build
 
 
-
 class Channel:
     """Класс для ютуб-канала"""
     api_key: str = os.getenv('YOU_TUBE_API_KEY')
-    youtube = build('youtube', 'v3', developerKey=api_key)   # объект для работы с api ютуба
+    youtube = build('youtube', 'v3', developerKey=api_key)  # объект для работы с api ютуба
 
-    def __init__(self, channel_id: str) -> None:
+    def __init__(self, channel_id) -> None:
         """Экземпляр инициализируется id канала. Дальше все данные будут подтягиваться по API."""
         self.__channel_id = channel_id
         self.channel_info = self.youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
@@ -43,7 +42,6 @@ class Channel:
 
     def __eq__(self, other):
         return int(self.subscriber_count) == int(other.subscriber_count)
-
 
     def print_info(self) -> None:
         """Выводит в консоль информацию о канале в удобном формате, с отступами"""
