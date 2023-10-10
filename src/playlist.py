@@ -1,22 +1,23 @@
-from src.channel import Channel
+from src.apimixin import APIMixin
+# from src.channel import Channel
 import datetime
 import isodate
 
 
-class PlayList(Channel):
+class PlayList(APIMixin):
 
     def __init__(self, playlist_id):
 
         self.playlist_id = playlist_id
-        self.playlist_info = self.youtube.playlists().list(id=playlist_id, part='snippet,contentDetails',
+        self.playlist_info = self.get_service().playlists().list(id=playlist_id, part='snippet,contentDetails',
                                                            maxResults=50).execute()
-        self.playlist_videos = self.youtube.playlistItems().list(playlistId=playlist_id, part='contentDetails, snippet',
+        self.playlist_videos = self.get_service().playlistItems().list(playlistId=playlist_id, part='contentDetails, snippet',
                                                                  maxResults=50, ).execute()
         self.title = self.playlist_info['items'][0]['snippet']['title']
         self.url = "https://www.youtube.com/playlist?list=" + playlist_id
         # получить все id видеороликов из плейлиста
         self.video_ids: list[str] = [video['contentDetails']['videoId'] for video in self.playlist_videos['items']]
-        self.video_response = self.youtube.videos().list(part='contentDetails,statistics',
+        self.video_response = self.get_service().videos().list(part='contentDetails,statistics',
                                                          id=','.join(self.video_ids)).execute()
 
     @property
